@@ -1,3 +1,4 @@
+import { BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts'
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore'
@@ -30,6 +31,13 @@ function Results() {
         const toplam = puanlar.reduce((a, b) => a + b, 0)
         return (toplam / puanlar.length).toFixed(1)
     }
+    function secenekVerisi(q) {
+        const secenekler = q.type === 'coktan-secmeli' ? q.options : ['Evet', 'Hayır']
+        return secenekler.map((opt) => ({
+            isim: opt,
+            sayi: responses.filter((r) => r.answers[q.id] === opt).length
+        }))
+    }
     if (!survey) {
         return (
             <div>
@@ -50,32 +58,28 @@ function Results() {
                     <div key={q.id} className="border border-slate-200 rounded p-4 mt-4">
                         <h2 className="font-bold">{q.text}</h2>
                         {(q.type === 'coktan-secmeli' || q.type === 'evet-hayir') && (
-  <div className="mt-2 space-y-1">
-    {(q.type === 'coktan-secmeli' ? q.options : ['Evet', 'Hayır']).map((opt) => {
-      const count = responses.filter((r) => r.answers[q.id] === opt).length
-      const yuzde = responses.length ? Math.round((count / responses.length) * 100) : 0
-      return (
-        <div key={opt} className="text-sm text-slate-600">
-          {opt}: {count} kişi (%{yuzde})
-        </div>
-      )
-    })}
-  </div>
-)}
+                            <BarChart width={400} height={200} data={secenekVerisi(q)}>
+                                <XAxis dataKey="isim" />
+                                <YAxis allowDecimals={false} />
+                                <Tooltip />
+                                <Bar dataKey="sayi" fill="#2563eb" />
+                            </BarChart>
+                        )}
 
-{q.type === 'puan' && (
-  <p className="text-sm text-slate-600 mt-2">Ortalama puan: {ortalamaPuan(q.id)}</p>
-)}
 
-{q.type === 'metin' && (
-  <div className="mt-2 space-y-1">
-    {responses.map((r, i) => (
-      r.answers[q.id] ? (
-        <div key={i} className="text-sm text-slate-600">• {r.answers[q.id]}</div>
-      ) : null
-    ))}
-  </div>
-)}
+                        {q.type === 'puan' && (
+                            <p className="text-sm text-slate-600 mt-2">Ortalama puan: {ortalamaPuan(q.id)}</p>
+                        )}
+
+                        {q.type === 'metin' && (
+                            <div className="mt-2 space-y-1">
+                                {responses.map((r, i) => (
+                                    r.answers[q.id] ? (
+                                        <div key={i} className="text-sm text-slate-600">• {r.answers[q.id]}</div>
+                                    ) : null
+                                ))}
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>
