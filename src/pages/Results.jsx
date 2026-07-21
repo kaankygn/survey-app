@@ -38,6 +38,16 @@ function Results() {
             sayi: responses.filter((r) => r.answers[q.id] === opt).length
         }))
     }
+    function zamanOnce(ms) {
+        const fark = Date.now() - ms
+        const dakika = Math.floor(fark / 60000)
+        if (dakika < 1) return 'az önce'
+        if (dakika < 60) return dakika + ' dk önce'
+        const saat = Math.floor(dakika / 60)
+        if (saat < 24) return saat + ' sa önce'
+        const gun = Math.floor(saat / 24)
+        return gun + ' gün önce'
+    }
     function csvIndir() {
         const basliklar = survey.questions.map((q) => '"' + q.text + '"')
         const satirlar = responses.map((r) =>
@@ -99,6 +109,19 @@ function Results() {
                             </div>
                         )}
                     </div>
+                ))}
+            </div>
+            <div className="border border-slate-200 rounded p-4 mt-4">
+                <h2 className="font-bold mb-2">Yanıt verenler</h2>
+                {responses.map((r, i) => (
+                    r.profile ? (
+                        <div key={i} className="flex items-center gap-3 mt-2">
+                            <img src={r.profile.photo} alt="" className="w-8 h-8 rounded-full" />
+                            <span className="text-sm text-slate-600">
+                                {r.profile.name} · {r.profile.city} · {zamanOnce(r.createdAt)}
+                            </span>
+                        </div>
+                    ) : null
                 ))}
             </div>
         </div>
