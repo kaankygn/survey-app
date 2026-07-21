@@ -9,7 +9,7 @@ function Fill() {
     const [survey, setSurvey] = useState(null)
     const [answers, setAnswers] = useState({})
     const [profile, setProfile] = useState(null)
-
+    const [hataVar, setHataVar] = useState(false)
     useEffect(() => {
         async function getir() {
             const docRef = doc(db, 'surveys', id)
@@ -39,6 +39,11 @@ function Fill() {
     }
 
     async function gonder() {
+        const eksik = survey.questions.some((q) => q.required && !answers[q.id])
+        if (eksik) {
+            setHataVar(true)
+            return
+        }
         await addDoc(collection(db, 'responses'), {
             surveyId: id,
             answers: answers,
@@ -63,8 +68,9 @@ function Fill() {
             )}
             {survey.questions.map((q) => (
                 <div key={q.id} className="mt-6">
-                    <p className="font-medium mb-2">{q.text}</p>
-
+                    <p className="font-medium mb-2">
+                        {q.text}{q.required && <span className="text-red-600"> *</span>}
+                    </p>
                     {q.type === 'metin' && (
                         <input
                             value={answers[q.id] || ''}
@@ -131,6 +137,9 @@ function Fill() {
                                 Hayır
                             </button>
                         </div>
+                    )}
+                    {hataVar && q.required && !answers[q.id] && (
+                        <p className="text-red-600 text-sm mt-1">Bu soru zorunludur.</p>
                     )}
                 </div>
             ))}
