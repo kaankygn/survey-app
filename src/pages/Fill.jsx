@@ -56,6 +56,10 @@ function Fill() {
     if (!survey) {
         return <div className="p-8">Yükleniyor...</div>
     }
+    const cevaplanan = survey.questions.filter((q) => answers[q.id]).length
+    const yuzde = survey.questions.length
+        ? Math.round((cevaplanan / survey.questions.length) * 100)
+        : 0
 
     return (
         <div className="p-8 max-w-2xl mx-auto">
@@ -66,6 +70,12 @@ function Fill() {
                     <span className="text-sm text-slate-600">{profile.name} · {profile.city}</span>
                 </div>
             )}
+            <div className="mt-4">
+                <div className="w-full bg-slate-200 rounded-full h-2">
+                    <div className="bg-blue-600 h-2 rounded-full" style={{ width: yuzde + '%' }}></div>
+                </div>
+                <p className="text-xs text-slate-500 mt-1">%{yuzde} tamamlandı</p>
+            </div>
             {survey.questions.map((q) => (
                 <div key={q.id} className="mt-6">
                     <p className="font-medium mb-2">
