@@ -38,6 +38,21 @@ function Results() {
             sayi: responses.filter((r) => r.answers[q.id] === opt).length
         }))
     }
+    function csvIndir() {
+        const basliklar = survey.questions.map((q) => '"' + q.text + '"')
+        const satirlar = responses.map((r) =>
+            survey.questions.map((q) => '"' + (r.answers[q.id] || '') + '"').join(',')
+        )
+        const csv = [basliklar.join(','), ...satirlar].join('\n')
+
+        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = survey.title + '.csv'
+        a.click()
+        URL.revokeObjectURL(url)
+    }
     if (!survey) {
         return (
             <div>
@@ -53,6 +68,9 @@ function Results() {
             <div className="p-8">
                 <h1 className="text-2xl font-bold">{survey.title} — Sonuçlar</h1>
                 <p className="text-slate-500 mt-1">{responses.length} yanıt</p>
+                <button onClick={csvIndir} className="mt-2 bg-slate-200 px-4 py-2 rounded text-sm">
+                    ⬇ CSV İndir
+                </button>
 
                 {survey.questions.map((q) => (
                     <div key={q.id} className="border border-slate-200 rounded p-4 mt-4">
