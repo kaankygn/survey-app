@@ -1,9 +1,11 @@
 import { useState } from "react"
 import { collection, addDoc } from "firebase/firestore"
 import { db } from'../firebase'
+import { useNavigate } from "react-router-dom"
 import Navbar from "../components/Navbar"
 
 function Builder() {
+    const navigate = useNavigate()
     const [title, setTitle] = useState('')
     const [questions, setQuestions] = useState([])
 
@@ -12,9 +14,20 @@ function Builder() {
             id: Date.now(),
             text:'Yeni soru',
             type: type,
+            required: false,
             options: type === 'coktan-secmeli' ? ['Seçenek1', 'Seçenek2']: []
         }
         setQuestions([...questions, yeniSoru])
+    }
+    
+    function soruSil(id) {
+        setQuestions(questions.filter((q) => q.id !== id))
+    }
+
+    function zorunluDegistir(id) {
+        setQuestions(questions.map((q) =>
+            q.id === id ? { ...q, required: !q.required } : q
+        ))
     }
 
     function soruMetniDegistir(id, yeniMetin) {
@@ -38,15 +51,16 @@ function Builder() {
     ))
     }
 
-    async function kaydet() {
+    async function kaydet(published) {
         await addDoc(collection(db, 'surveys'), {
             title: title,
             questions: questions,
+            published: published,
             createdAt: Date.now()
-        }
-    )
-      alert('Anket kaydedildi!') 
+        })
+        navigate('/')
     }
+    
     return(
     <div>
         <Navbar/>
@@ -66,11 +80,22 @@ function Builder() {
     <button onClick={() => soruEkle('puan')} className="bg-slate-200 px-3 py-2 rounded">+ Puanlama</button>
     <button onClick={() => soruEkle('evet-hayir')} className="bg-slate-200 px-3 py-2 rounded">+ Evet / Hayır</button>
     </div>
-
+        
         <div className="mt-4">
           {questions.map((q) => (
         <div key={q.id} className="border border-slate-200 rounded p-4 mt-2">
-            <div className="text-xs text-slate-400 mb-1">{q.type}</div>
+            <div className="flex justify-between items-center mb-1">
+                <span className="text-xs text-slate-400">{q.type}</span>
+                <label className="flex items-center gap-2 mt-2 text-sm text-slate-600">
+                    <input
+                        type="checkbox"
+                        checked={q.required || false}
+                        onChange={() => zorunluDegistir(q.id)}
+                    />
+                    Zorunlu
+                </label>
+                <button onClick={() => soruSil(q.id)} className="text-red-600 text-sm">Sil</button>
+            </div>
             <input
                 value={q.text}
                 onChange={(e) => soruMetniDegistir(q.id, e.target.value)}
@@ -94,13 +119,14 @@ function Builder() {
         </div>
         ))}
         </div>
-        
-        <button
-            onClick={kaydet}
-            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
-        >
-            Kaydet
+            <div className="mt-4 flex gap-2">
+            <button onClick={() => kaydet(false)} className="bg-slate-200 px-4 py-2 rounded">
+                Taslak Kaydet
             </button>
+            <button onClick={() => kaydet(true)} className="bg-blue-600 text-white px-4 py-2 rounded">
+                Yayınla
+            </button>
+            </div>
         </div>
     </div>
     )
