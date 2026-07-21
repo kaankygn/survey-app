@@ -74,10 +74,19 @@ function Builder() {
                 published: published
             })
         } else {
+            const res = await fetch('https://randomuser.me/api/')
+            const data = await res.json()
+            const u = data.results[0]
+            const creator = {
+                name: u.name.first + ' ' + u.name.last,
+                city: u.location.city,
+                photo: u.picture.thumbnail
+            }
             await addDoc(collection(db, 'surveys'), {
                 title: title,
                 questions: questions,
                 published: published,
+                creator: creator,
                 createdAt: Date.now()
             })
         }

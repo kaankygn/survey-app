@@ -53,7 +53,19 @@ function Dashboard() {
                 {surveys.map((survey) => (
                     <div key={survey.id} className="border border-slate-200 rounded p-4 mt-4">
                         <div className="flex justify-between items-center">
-                            <h2 className="font-bold">{survey.title}</h2>
+                            <div className="flex items-center gap-2">
+                                {survey.creator && (
+                                    <img src={survey.creator.photo} alt="" className="w-8 h-8 rounded-full" />
+                                )}
+                                <div>
+                                    <h2 className="font-bold">{survey.title}</h2>
+                                    {survey.creator && (
+                                        <p className="text-xs text-slate-500">
+                                            {survey.creator.name} · {survey.creator.city}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
                             <span className={
                                 survey.published
                                     ? "text-xs bg-green-100 text-green-700 px-2 py-1 rounded"
