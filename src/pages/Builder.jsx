@@ -2,7 +2,9 @@ import { useState, useEffect } from "react"
 import { collection, addDoc, doc, getDoc, updateDoc } from "firebase/firestore"
 import { db } from '../firebase'
 import { useNavigate, useParams } from "react-router-dom"
+
 import Navbar from "../components/Navbar"
+import Button from "../components/Button"
 
 function Builder() {
     const navigate = useNavigate()
@@ -151,12 +153,8 @@ function Builder() {
                     ))}
                 </div>
                 <div className="mt-4 flex gap-2">
-                    <button onClick={() => kaydet(false)} className="bg-slate-200 px-4 py-2 rounded">
-                        Taslak Kaydet
-                    </button>
-                    <button onClick={() => kaydet(true)} className="bg-blue-600 text-white px-4 py-2 rounded">
-                        Yayınla
-                    </button>
+                    <Button variant="secondary" onClick={() => kaydet(false)}>Taslak Kaydet</Button>
+                    <Button variant="primary" onClick={() => kaydet(true)}>Yayınla</Button>
                 </div>
             </div>
         </div>
