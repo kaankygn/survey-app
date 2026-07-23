@@ -3,7 +3,9 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore'
 import { db } from '../firebase'
+
 import Navbar from '../components/Navbar'
+import Button from '../components/Button'
 
 function Results() {
     const { id } = useParams()
@@ -78,9 +80,9 @@ function Results() {
             <div className="p-8">
                 <h1 className="text-2xl font-bold">{survey.title} — Sonuçlar</h1>
                 <p className="text-slate-500 mt-1">{responses.length} yanıt</p>
-                <button onClick={csvIndir} className="mt-2 bg-slate-200 px-4 py-2 rounded text-sm">
-                    ⬇ CSV İndir
-                </button>
+                <div className="mt-2">
+                    <Button variant="secondary" onClick={csvIndir}> CSV İndir ⬇</Button>
+                </div>
 
                 {survey.questions.map((q) => (
                     <div key={q.id} className="border border-slate-200 rounded p-4 mt-4">

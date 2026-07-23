@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { doc, getDoc, collection, addDoc } from 'firebase/firestore'
 import { db } from '../firebase'
 
+import Button from '../components/Button'
+
 function Fill() {
     const { id } = useParams()
     const navigate = useNavigate()
@@ -154,9 +156,7 @@ function Fill() {
                 </div>
             ))}
 
-            <button onClick={gonder} className="mt-8 bg-blue-600 text-white px-6 py-2 rounded">
-                Gönder
-            </button>
+            <div className="mt-8"><Button onClick={gonder}>Gönder</Button></div>
         </div>
     )
 }
