@@ -4,7 +4,7 @@ import { BarChart3, Plus } from 'lucide-react'
 function Navbar() {
   return (
     <nav className="bg-gradient-to-r from-slate-900 to-indigo-900 shadow-lg sticky top-0 z-50">
-      <div className=" px-10 py-8 flex items-center gap-8">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-8">
         <Link to="/" className="flex items-center gap-2 text-white font-bold text-xl">
           <BarChart3 className="w-8 h-8 text-indigo-400" />
           SurveyApp

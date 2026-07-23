@@ -2,9 +2,9 @@ import Navbar from './Navbar'
 
 function Layout({ children }) {
   return (
-    <div>
+    <div className="bg-slate-50 min-h-screen">
       <Navbar />
-      <div className="p-8">
+      <div className="max-w-7xl mx-auto px-6 py-8">
         {children}
       </div>
     </div>
