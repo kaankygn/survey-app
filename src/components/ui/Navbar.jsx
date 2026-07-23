@@ -28,6 +28,9 @@ function Navbar() {
           <Plus className="w-5 h-5" />
           Yeni Anket
         </Link>
+        <div className="w-13 h-13 rounded-full bg-indigo-300 text-indigo-950 flex items-center justify-center text-sm font-medium shadow-md">
+          KK
+        </div>
       </div>
     </nav>
   )
