@@ -1,14 +1,14 @@
-function Button ({ children, onClick, variant = 'primary' }) {
+function Button({ children, onClick, variant = 'primary' }) {
 
     const stiller = {
-        primary: 'bg-blue-600 text-white',
-        secondary: 'bg-slate-200 text-slate-800'
+        primary: 'bg-indigo-600 text-white hover:bg-indigo-700',
+        secondary: 'bg-slate-200 text-slate-800 hover:bg-slate-300'
     }
 
-    return(
+    return (
         <button
             onClick={onClick}
-            className={`px-4 py-2 rounded ${stiller[variant]}`}
+            className={`px-4 py-2 rounded-lg transition ${stiller[variant]}`}
         >
             {children}
         </button>
