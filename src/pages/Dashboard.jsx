@@ -4,8 +4,8 @@ import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore'
 import { db } from '../firebase'
 
 //companents
-import Card from '../components/Card'
-import Layout from '../components/Layout'
+import Card from '../components/ui/Card'
+import Layout from '../components/ui/Layout'
 
 function Dashboard() {
     const [surveys, setSurveys] = useState([])

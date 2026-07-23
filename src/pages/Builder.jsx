@@ -4,15 +4,16 @@ import { db } from '../firebase'
 import { useNavigate, useParams } from "react-router-dom"
 
 //companents
-import Button from "../components/Button"
-import Card from "../components/Card"
-import Layout from "../components/Layout"
+import Button from "../components/ui/Button"
+import Card from "../components/ui/Card"
+import Layout from "../components/ui/Layout"
 
 function Builder() {
     const navigate = useNavigate()
     const { id } = useParams()
     const [title, setTitle] = useState('')
     const [questions, setQuestions] = useState([])
+    const [menuAcik, setMenuAcik] = useState(false)
 
     useEffect(() => {
         if (!id) return
@@ -37,6 +38,7 @@ function Builder() {
             options: type === 'coktan-secmeli' ? ['Seçenek1', 'Seçenek2'] : []
         }
         setQuestions([...questions, yeniSoru])
+        setMenuAcik(false)
     }
 
     function soruSil(id) {
@@ -108,11 +110,17 @@ function Builder() {
                 className="border border-slate-300 rounded px-3 py-2 mt-4 block w-full max-w-md"
             />
 
-            <div className="flex gap-2 mt-4">
-                <button onClick={() => soruEkle('coktan-secmeli')} className="bg-slate-200 px-3 py-2 rounded">+ Çoktan Seçmeli</button>
-                <button onClick={() => soruEkle('metin')} className="bg-slate-200 px-3 py-2 rounded">+ Metin</button>
-                <button onClick={() => soruEkle('puan')} className="bg-slate-200 px-3 py-2 rounded">+ Puanlama</button>
-                <button onClick={() => soruEkle('evet-hayir')} className="bg-slate-200 px-3 py-2 rounded">+ Evet / Hayır</button>
+            <div className="mt-4">
+                <Button onClick={() => setMenuAcik(!menuAcik)}>+ Soru Ekle</Button>
+
+                {menuAcik && (
+                    <div className="flex gap-2 mt-2">
+                        <button onClick={() => soruEkle('coktan-secmeli')} className="bg-slate-200 px-3 py-2 rounded">+ Çoktan Seçmeli</button>
+                        <button onClick={() => soruEkle('metin')} className="bg-slate-200 px-3 py-2 rounded">+ Metin</button>
+                        <button onClick={() => soruEkle('puan')} className="bg-slate-200 px-3 py-2 rounded">+ Puanlama</button>
+                        <button onClick={() => soruEkle('evet-hayir')} className="bg-slate-200 px-3 py-2 rounded">+ Evet / Hayır</button>
+                    </div>
+                )}
             </div>
 
             <div className="mt-4">

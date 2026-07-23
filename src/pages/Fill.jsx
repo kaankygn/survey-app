@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { doc, getDoc, collection, addDoc } from 'firebase/firestore'
 import { db } from '../firebase'
 
-import Button from '../components/Button'
+import Button from '../components/ui/Button'
 
 function Fill() {
     const { id } = useParams()
