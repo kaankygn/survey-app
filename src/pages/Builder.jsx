@@ -2,6 +2,8 @@ import { useState, useEffect } from "react"
 import { collection, addDoc, doc, getDoc, updateDoc } from "firebase/firestore"
 import { db } from '../firebase'
 import { useNavigate, useParams } from "react-router-dom"
+import { DndContext, closestCenter } from '@dnd-kit/core'
+import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable'
 
 //companents
 import Button from "../components/ui/Button"
@@ -40,6 +42,15 @@ function Builder() {
             options: type === 'coktan-secmeli' ? ['', ''] : []
         }
         setQuestions([...questions, yeniSoru])
+    }
+
+    function suruklemeBitti(event) {
+        const { active, over } = event
+        if (over && active.id !== over.id) {
+            const eskiIndex = questions.findIndex((q) => q.id === active.id)
+            const yeniIndex = questions.findIndex((q) => q.id === over.id)
+            setQuestions(arrayMove(questions, eskiIndex, yeniIndex))
+        }
     }
 
     function soruSil(id) {
@@ -121,19 +132,24 @@ function Builder() {
 
             <SoruEkleMenu onEkle={soruEkle} />
 
-            <div className="mt-4">
-                {questions.map((q) => (
-                    <SoruKart
-                        key={q.id}
-                        q={q}
-                        onSil={soruSil}
-                        onZorunlu={zorunluDegistir}
-                        onMetin={soruMetniDegistir}
-                        onSecenekDegistir={secenekDegistir}
-                        onSecenekEkle={secenekEkle}
-                    />
-                ))}
-            </div>
+            <DndContext collisionDetection={closestCenter} onDragEnd={suruklemeBitti}>
+                <SortableContext items={questions.map((q) => q.id)} strategy={verticalListSortingStrategy}>
+                    <div className="mt-4">
+                        {questions.map((q, index) => (
+                            <SoruKart
+                                key={q.id}
+                                sira={index + 1}
+                                q={q}
+                                onSil={soruSil}
+                                onZorunlu={zorunluDegistir}
+                                onMetin={soruMetniDegistir}
+                                onSecenekDegistir={secenekDegistir}
+                                onSecenekEkle={secenekEkle}
+                            />
+                        ))}
+                    </div>
+                </SortableContext>
+            </DndContext>
 
             <div className="mt-4 flex gap-2">
                 <Button variant="secondary" onClick={() => kaydet(false)}>Taslak Kaydet</Button>
