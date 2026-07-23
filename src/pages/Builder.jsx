@@ -8,6 +8,7 @@ import Button from "../components/ui/Button"
 import Layout from "../components/ui/Layout"
 import SoruEkleMenu from "../components/builder/SoruEkleMenu"
 import SoruKart from "../components/builder/SoruKart"
+import Input from "../components/ui/Input"
 
 
 function Builder() {
@@ -33,10 +34,10 @@ function Builder() {
     function soruEkle(type) {
         const yeniSoru = {
             id: Date.now(),
-            text: 'Yeni soru',
+            text: '',
             type: type,
             required: false,
-            options: type === 'coktan-secmeli' ? ['Seçenek1', 'Seçenek2'] : []
+            options: type === 'coktan-secmeli' ? ['', ''] : []
         }
         setQuestions([...questions, yeniSoru])
     }
@@ -68,7 +69,7 @@ function Builder() {
 
     function secenekEkle(soruId) {
         setQuestions(questions.map((q) =>
-            q.id === soruId ? { ...q, options: [...q.options, 'Yeni seçenek'] } : q
+            q.id === soruId ? { ...q, options: [...q.options, ''] } : q
         ))
     }
 
@@ -101,13 +102,21 @@ function Builder() {
     return (
 
         <Layout>
-            <h1 className="text-2xl font-bold">{id ? 'Anketi Düzenle' : 'Anket Oluştur'}</h1>
 
-            <input
+            <div className="mb-6">
+                <h1 className="text-3xl font-bold text-slate-900">
+                    {id ? 'Anketi Düzenle' : 'Anket Oluştur'}
+                </h1>
+                <p className="text-slate-500 mt-1">
+                    Sorularını ekle, düzenle ve hazır olunca yayınla.
+                </p>
+            </div>
+
+            <Input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Anket başlığı"
-                className="border border-slate-300 rounded px-3 py-2 mt-4 block w-full max-w-md"
+                className="block w-full max-w-md px-4 py-2.5"
             />
 
             <SoruEkleMenu onEkle={soruEkle} />
@@ -125,11 +134,12 @@ function Builder() {
                     />
                 ))}
             </div>
-            
+
             <div className="mt-4 flex gap-2">
                 <Button variant="secondary" onClick={() => kaydet(false)}>Taslak Kaydet</Button>
                 <Button variant="primary" onClick={() => kaydet(true)}>Yayınla</Button>
             </div>
+
         </Layout>
 
     )
