@@ -4,9 +4,9 @@ import { db } from '../firebase'
 import { useNavigate, useParams } from "react-router-dom"
 
 //companents
-import Navbar from "../components/Navbar"
 import Button from "../components/Button"
 import Card from "../components/Card"
+import Layout from "../components/Layout"
 
 function Builder() {
     const navigate = useNavigate()
@@ -97,69 +97,68 @@ function Builder() {
         navigate('/')
     }
     return (
-        <div>
-            <Navbar />
-            <div className="p-8">
-                <h1 className="text-2xl font-bold">{id ? 'Anketi Düzenle' : 'Anket Oluştur'}</h1>
 
-                <input
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="Anket başlığı"
-                    className="border border-slate-300 rounded px-3 py-2 mt-4 block w-full max-w-md"
-                />
+        <Layout>
+            <h1 className="text-2xl font-bold">{id ? 'Anketi Düzenle' : 'Anket Oluştur'}</h1>
 
-                <div className="flex gap-2 mt-4">
-                    <button onClick={() => soruEkle('coktan-secmeli')} className="bg-slate-200 px-3 py-2 rounded">+ Çoktan Seçmeli</button>
-                    <button onClick={() => soruEkle('metin')} className="bg-slate-200 px-3 py-2 rounded">+ Metin</button>
-                    <button onClick={() => soruEkle('puan')} className="bg-slate-200 px-3 py-2 rounded">+ Puanlama</button>
-                    <button onClick={() => soruEkle('evet-hayir')} className="bg-slate-200 px-3 py-2 rounded">+ Evet / Hayır</button>
-                </div>
+            <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Anket başlığı"
+                className="border border-slate-300 rounded px-3 py-2 mt-4 block w-full max-w-md"
+            />
 
-                <div className="mt-4">
-                    {questions.map((q) => (
-                        <Card key={q.id} className="mt-2">
-                            <div className="flex justify-between items-center mb-1">
-                                <span className="text-xs text-slate-400">{q.type}</span>
-                                <label className="flex items-center gap-2 mt-2 text-sm text-slate-600">
-                                    <input
-                                        type="checkbox"
-                                        checked={q.required || false}
-                                        onChange={() => zorunluDegistir(q.id)}
-                                    />
-                                    Zorunlu
-                                </label>
-                                <button onClick={() => soruSil(q.id)} className="text-red-600 text-sm">Sil</button>
-                            </div>
-                            <input
-                                value={q.text}
-                                onChange={(e) => soruMetniDegistir(q.id, e.target.value)}
-                                className="border border-slate-300 rounded px-3 py-2 w-full"
-                            />
-                            {q.type === 'coktan-secmeli' && (
-                                <div className="mt-2 space-y-1">
-                                    {q.options.map((opt, i) => (
-                                        <input
-                                            key={i}
-                                            value={opt}
-                                            onChange={(e) => secenekDegistir(q.id, i, e.target.value)}
-                                            className="border border-slate-300 rounded px-2 py-1 w-full text-sm"
-                                        />
-                                    ))}
-                                    <button onClick={() => secenekEkle(q.id)} className="text-blue-600 text-sm">
-                                        + Seçenek ekle
-                                    </button>
-                                </div>
-                            )}
-                        </Card>
-                    ))}
-                </div>
-                <div className="mt-4 flex gap-2">
-                    <Button variant="secondary" onClick={() => kaydet(false)}>Taslak Kaydet</Button>
-                    <Button variant="primary" onClick={() => kaydet(true)}>Yayınla</Button>
-                </div>
+            <div className="flex gap-2 mt-4">
+                <button onClick={() => soruEkle('coktan-secmeli')} className="bg-slate-200 px-3 py-2 rounded">+ Çoktan Seçmeli</button>
+                <button onClick={() => soruEkle('metin')} className="bg-slate-200 px-3 py-2 rounded">+ Metin</button>
+                <button onClick={() => soruEkle('puan')} className="bg-slate-200 px-3 py-2 rounded">+ Puanlama</button>
+                <button onClick={() => soruEkle('evet-hayir')} className="bg-slate-200 px-3 py-2 rounded">+ Evet / Hayır</button>
             </div>
-        </div>
+
+            <div className="mt-4">
+                {questions.map((q) => (
+                    <Card key={q.id} className="mt-2">
+                        <div className="flex justify-between items-center mb-1">
+                            <span className="text-xs text-slate-400">{q.type}</span>
+                            <label className="flex items-center gap-2 mt-2 text-sm text-slate-600">
+                                <input
+                                    type="checkbox"
+                                    checked={q.required || false}
+                                    onChange={() => zorunluDegistir(q.id)}
+                                />
+                                Zorunlu
+                            </label>
+                            <button onClick={() => soruSil(q.id)} className="text-red-600 text-sm">Sil</button>
+                        </div>
+                        <input
+                            value={q.text}
+                            onChange={(e) => soruMetniDegistir(q.id, e.target.value)}
+                            className="border border-slate-300 rounded px-3 py-2 w-full"
+                        />
+                        {q.type === 'coktan-secmeli' && (
+                            <div className="mt-2 space-y-1">
+                                {q.options.map((opt, i) => (
+                                    <input
+                                        key={i}
+                                        value={opt}
+                                        onChange={(e) => secenekDegistir(q.id, i, e.target.value)}
+                                        className="border border-slate-300 rounded px-2 py-1 w-full text-sm"
+                                    />
+                                ))}
+                                <button onClick={() => secenekEkle(q.id)} className="text-blue-600 text-sm">
+                                    + Seçenek ekle
+                                </button>
+                            </div>
+                        )}
+                    </Card>
+                ))}
+            </div>
+            <div className="mt-4 flex gap-2">
+                <Button variant="secondary" onClick={() => kaydet(false)}>Taslak Kaydet</Button>
+                <Button variant="primary" onClick={() => kaydet(true)}>Yayınla</Button>
+            </div>
+        </Layout>
+
     )
 }
 export default Builder

@@ -5,9 +5,9 @@ import { doc, getDoc, collection, getDocs } from 'firebase/firestore'
 import { db } from '../firebase'
 
 //companents
-import Navbar from '../components/Navbar'
 import Button from '../components/Button'
 import Card from '../components/Card'
+import Layout from '../components/Layout'
 
 function Results() {
     const { id } = useParams()
@@ -69,52 +69,50 @@ function Results() {
     }
     if (!survey) {
         return (
-            <div>
-                <Navbar />
-                <div className="p-8">Yükleniyor...</div>
-            </div>
+            <Layout>
+                <p>Yükleniyor...</p>
+            </Layout>
         )
     }
 
     return (
-        <div>
-            <Navbar />
-            <div className="p-8">
-                <h1 className="text-2xl font-bold">{survey.title} — Sonuçlar</h1>
-                <p className="text-slate-500 mt-1">{responses.length} yanıt</p>
-                <div className="mt-2">
-                    <Button variant="secondary" onClick={csvIndir}> CSV İndir ⬇</Button>
-                </div>
+        <Layout>
 
-                {survey.questions.map((q) => (
-                    <Card key={q.id} className="mt-4">
-                        <h2 className="font-bold">{q.text}</h2>
-                        {(q.type === 'coktan-secmeli' || q.type === 'evet-hayir') && (
-                            <BarChart width={400} height={200} data={secenekVerisi(q)}>
-                                <XAxis dataKey="isim" />
-                                <YAxis allowDecimals={false} />
-                                <Tooltip />
-                                <Bar dataKey="sayi" fill="#2563eb" />
-                            </BarChart>
-                        )}
-
-
-                        {q.type === 'puan' && (
-                            <p className="text-sm text-slate-600 mt-2">Ortalama puan: {ortalamaPuan(q.id)}</p>
-                        )}
-
-                        {q.type === 'metin' && (
-                            <div className="mt-2 space-y-1">
-                                {responses.map((r, i) => (
-                                    r.answers[q.id] ? (
-                                        <div key={i} className="text-sm text-slate-600">• {r.answers[q.id]}</div>
-                                    ) : null
-                                ))}
-                            </div>
-                        )}
-                    </Card>
-                ))}
+            <h1 className="text-2xl font-bold">{survey.title} — Sonuçlar</h1>
+            <p className="text-slate-500 mt-1">{responses.length} yanıt</p>
+            <div className="mt-2">
+                <Button variant="secondary" onClick={csvIndir}> CSV İndir ⬇</Button>
             </div>
+
+            {survey.questions.map((q) => (
+                <Card key={q.id} className="mt-4">
+                    <h2 className="font-bold">{q.text}</h2>
+                    {(q.type === 'coktan-secmeli' || q.type === 'evet-hayir') && (
+                        <BarChart width={400} height={200} data={secenekVerisi(q)}>
+                            <XAxis dataKey="isim" />
+                            <YAxis allowDecimals={false} />
+                            <Tooltip />
+                            <Bar dataKey="sayi" fill="#2563eb" />
+                        </BarChart>
+                    )}
+
+
+                    {q.type === 'puan' && (
+                        <p className="text-sm text-slate-600 mt-2">Ortalama puan: {ortalamaPuan(q.id)}</p>
+                    )}
+
+                    {q.type === 'metin' && (
+                        <div className="mt-2 space-y-1">
+                            {responses.map((r, i) => (
+                                r.answers[q.id] ? (
+                                    <div key={i} className="text-sm text-slate-600">• {r.answers[q.id]}</div>
+                                ) : null
+                            ))}
+                        </div>
+                    )}
+                </Card>
+            ))}
+
             <Card className="mt-4">
                 <h2 className="font-bold mb-2">Yanıt verenler</h2>
                 {responses.map((r, i) => (
@@ -128,7 +126,7 @@ function Results() {
                     ) : null
                 ))}
             </Card>
-        </div>
+        </Layout>
     )
 }
 

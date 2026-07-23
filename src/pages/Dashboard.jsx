@@ -4,8 +4,8 @@ import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore'
 import { db } from '../firebase'
 
 //companents
-import Navbar from '../components/Navbar'
 import Card from '../components/Card'
+import Layout from '../components/Layout'
 
 function Dashboard() {
     const [surveys, setSurveys] = useState([])
@@ -48,49 +48,47 @@ function Dashboard() {
     }
 
     return (
-        <div>
-            <Navbar />
-            <div className="p-8">
-                <h1 className="text-2xl font-bold mb-4">Anketlerim</h1>
+        <Layout>
+            <h1 className="text-2xl font-bold mb-4">Anketlerim</h1>
 
-                {surveys.map((survey) => (
-                    <Card key={survey.id} className="mt-4">
-                        <div className="flex justify-between items-center">
-                            <div className="flex items-center gap-2">
+            {surveys.map((survey) => (
+                <Card key={survey.id} className="mt-4">
+                    <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-2">
+                            {survey.creator && (
+                                <img src={survey.creator.photo} alt="" className="w-8 h-8 rounded-full" />
+                            )}
+                            <div>
+                                <h2 className="font-bold">{survey.title}</h2>
                                 {survey.creator && (
-                                    <img src={survey.creator.photo} alt="" className="w-8 h-8 rounded-full" />
+                                    <p className="text-xs text-slate-500">
+                                        {survey.creator.name} · {survey.creator.city}
+                                    </p>
                                 )}
-                                <div>
-                                    <h2 className="font-bold">{survey.title}</h2>
-                                    {survey.creator && (
-                                        <p className="text-xs text-slate-500">
-                                            {survey.creator.name} · {survey.creator.city}
-                                        </p>
-                                    )}
-                                </div>
                             </div>
-                            <span className={
-                                survey.published
-                                    ? "text-xs bg-green-100 text-green-700 px-2 py-1 rounded"
-                                    : "text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded"
-                            }>
-                                {survey.published ? 'Yayında' : 'Taslak'}
-                            </span>
                         </div>
-                        <p className="text-sm text-slate-500 mt-1">
-                            {survey.questions.length} soru · {survey.responseCount} yanıt · %{survey.tamamlama} tamamlama
-                        </p>
+                        <span className={
+                            survey.published
+                                ? "text-xs bg-green-100 text-green-700 px-2 py-1 rounded"
+                                : "text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded"
+                        }>
+                            {survey.published ? 'Yayında' : 'Taslak'}
+                        </span>
+                    </div>
+                    <p className="text-sm text-slate-500 mt-1">
+                        {survey.questions.length} soru · {survey.responseCount} yanıt · %{survey.tamamlama} tamamlama
+                    </p>
 
-                        <div className="flex gap-3 mt-3 text-sm">
-                            <Link to={'/edit/' + survey.id} className="text-blue-600">Düzenle</Link>
-                            <Link to={'/results/' + survey.id} className="text-blue-600">Sonuçlar</Link>
-                            <button onClick={() => paylas(survey.id)} className="text-blue-600">Paylaş</button>
-                            <button onClick={() => sil(survey.id)} className="text-red-600">Sil</button>
-                        </div>
-                    </Card>
-                ))}
-            </div>
-        </div>
+                    <div className="flex gap-3 mt-3 text-sm">
+                        <Link to={'/edit/' + survey.id} className="text-blue-600">Düzenle</Link>
+                        <Link to={'/results/' + survey.id} className="text-blue-600">Sonuçlar</Link>
+                        <button onClick={() => paylas(survey.id)} className="text-blue-600">Paylaş</button>
+                        <button onClick={() => sil(survey.id)} className="text-red-600">Sil</button>
+                    </div>
+                </Card>
+            ))}
+        </Layout>
+
     )
 }
 
