@@ -4,8 +4,10 @@ import { useParams } from 'react-router-dom'
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore'
 import { db } from '../firebase'
 
+//companents
 import Navbar from '../components/Navbar'
 import Button from '../components/Button'
+import Card from '../components/Card'
 
 function Results() {
     const { id } = useParams()
@@ -85,7 +87,7 @@ function Results() {
                 </div>
 
                 {survey.questions.map((q) => (
-                    <div key={q.id} className="border border-slate-200 rounded p-4 mt-4">
+                    <Card key={q.id} className="mt-4">
                         <h2 className="font-bold">{q.text}</h2>
                         {(q.type === 'coktan-secmeli' || q.type === 'evet-hayir') && (
                             <BarChart width={400} height={200} data={secenekVerisi(q)}>
@@ -110,10 +112,10 @@ function Results() {
                                 ))}
                             </div>
                         )}
-                    </div>
+                    </Card>
                 ))}
             </div>
-            <div className="border border-slate-200 rounded p-4 mt-4">
+            <Card className="mt-4">
                 <h2 className="font-bold mb-2">Yanıt verenler</h2>
                 {responses.map((r, i) => (
                     r.profile ? (
@@ -125,7 +127,7 @@ function Results() {
                         </div>
                     ) : null
                 ))}
-            </div>
+            </Card>
         </div>
     )
 }

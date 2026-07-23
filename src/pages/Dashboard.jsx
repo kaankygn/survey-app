@@ -2,7 +2,10 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore'
 import { db } from '../firebase'
+
+//companents
 import Navbar from '../components/Navbar'
+import Card from '../components/Card'
 
 function Dashboard() {
     const [surveys, setSurveys] = useState([])
@@ -51,7 +54,7 @@ function Dashboard() {
                 <h1 className="text-2xl font-bold mb-4">Anketlerim</h1>
 
                 {surveys.map((survey) => (
-                    <div key={survey.id} className="border border-slate-200 rounded p-4 mt-4">
+                    <Card key={survey.id} className="mt-4">
                         <div className="flex justify-between items-center">
                             <div className="flex items-center gap-2">
                                 {survey.creator && (
@@ -84,7 +87,7 @@ function Dashboard() {
                             <button onClick={() => paylas(survey.id)} className="text-blue-600">Paylaş</button>
                             <button onClick={() => sil(survey.id)} className="text-red-600">Sil</button>
                         </div>
-                    </div>
+                    </Card>
                 ))}
             </div>
         </div>

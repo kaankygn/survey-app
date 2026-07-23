@@ -3,8 +3,10 @@ import { collection, addDoc, doc, getDoc, updateDoc } from "firebase/firestore"
 import { db } from '../firebase'
 import { useNavigate, useParams } from "react-router-dom"
 
+//companents
 import Navbar from "../components/Navbar"
 import Button from "../components/Button"
+import Card from "../components/Card"
 
 function Builder() {
     const navigate = useNavigate()
@@ -116,7 +118,7 @@ function Builder() {
 
                 <div className="mt-4">
                     {questions.map((q) => (
-                        <div key={q.id} className="border border-slate-200 rounded p-4 mt-2">
+                        <Card key={q.id} className="mt-2">
                             <div className="flex justify-between items-center mb-1">
                                 <span className="text-xs text-slate-400">{q.type}</span>
                                 <label className="flex items-center gap-2 mt-2 text-sm text-slate-600">
@@ -149,7 +151,7 @@ function Builder() {
                                     </button>
                                 </div>
                             )}
-                        </div>
+                        </Card>
                     ))}
                 </div>
                 <div className="mt-4 flex gap-2">
